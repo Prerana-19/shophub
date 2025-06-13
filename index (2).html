@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Your Online Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #3c3c3c;
+            background: linear-gradient(135deg, #7786cc 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(105, 12, 12, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .nav-links button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .cart-btn {
+            position: relative;
+            background: #667eea !important;
+            color: white !important;
+            padding: 0.7rem 1.5rem !important;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        /* Forms */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 400px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .form-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .form-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        /* Cart */
+        .cart-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cart-item-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-total {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cart-total h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .total-amount {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        /* Checkout */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .checkout-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">🛍️ ShopHub</div>
+                <div class="nav-links">
+                    <button onclick="showPage('home')">Home</button>
+                    <button onclick="showPage('products')">Products</button>
+                    <button onclick="showPage('cart')" class="cart-btn">
+                        Cart <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <button onclick="showPage('login')" id="loginBtn">Login</button>
+                    <button onclick="logout()" id="logoutBtn" style="display: none;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="container">
+            <div class="hero">
+                <h1>Welcome to ShopHub</h1>
+                <p>Discover amazing products at unbeatable prices</p>
+                <button class="cta-btn" onclick="showPage('products')">Shop Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Page -->
+    <div id="products" class="page">
+        <div class="container">
+            <h2 style="color: white; text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Our Products</h2>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login" class="page">
+        <div class="container">
+            <div class="form-container">
+                <h2>Login to Your Account</h2>
+                <div class="success-message" id="loginSuccess">Login successful!</div>
+                <div class="error-message" id="loginError">Login failed. Please try again.</div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="form-btn">Login</button>
+                </form>
+                <div class="form-link">
+                    <a href="#" onclick="showPage('register')">Don't have an account? Register here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register" class="page">
+        <div class="container">
+            <div class="form-container">
+                <h2>Create New Account</h2>
+                <div class="success-message" id="registerSuccess">Account created successfully!</div>
+                <div class="error-message" id="registerError">Registration failed. Please try again.</div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name:</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <button type="submit" class="form-btn">Register</button>
+                </form>
+                <div class="form-link">
+                    <a href="#" onclick="showPage('login')">Already have an account? Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cart" class="page">
+        <div class="container">
+            <h2 style="color: white; text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Shopping Cart</h2>
+            <div id="cartItems">
+                <!-- Cart items will be displayed here -->
+            </div>
+            <div class="cart-total" id="cartTotal" style="display: none;">
+                <h2>Order Total</h2>
+                <div class="total-amount" id="totalAmount">$0.00</div>
+                <button class="form-btn" onclick="showPage('checkout')">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Page -->
+    <div id="checkout" class="page">
+        <div class="container">
+            <h2 style="color: white; text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Checkout</h2>
+            <div class="checkout-container">
+                <div class="checkout-form">
+                    <h3 style="margin-bottom: 1.5rem;">Shipping Information</h3>
+                    <div class="success-message" id="orderSuccess">Order placed successfully!</div>
+                    <div class="error-message" id="orderError">Order failed. Please try again.</div>
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name:</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" id="address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code:</label>
+                            <input type="text" id="zipCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date:</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV:</label>
+                            <input type="text" id="cvv" placeholder="123" required>
+                        </div>
+                        <button type="submit" class="form-btn">Place Order</button>
+                    </form>
+                </div>
+                <div class="order-summary">
+                    <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+                    <div id="checkoutItems">
+                        <!-- Order summary items -->
+                    </div>
+                    <hr style="margin: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold;">
+                        <span>Total:</span>
+                        <span id="checkoutTotal">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, addDoc, collection, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAW_kTxvhppWRk1nS1pnEL9uObJ6-BO9Qc",
+  authDomain: "shopup-d6231.firebaseapp.com",
+  projectId: "shopup-d6231",
+  storageBucket: "shopup-d6231.firebasestorage.app",
+  messagingSenderId: "484449870315",
+  appId: "1:484449870315:web:40b2c10a3b9af7b073f9ae",
+  measurementId: "G-Q2VXRF81SZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        // Make Firebase available globally
+        window.auth = auth;
+        window.db = db;
+        window.firebaseModules = {
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut,
+            doc,
+            setDoc,
+            getDoc,
+            addDoc,
+            collection,
+            updateDoc,
+            deleteDoc,
+            getDocs,
+            serverTimestamp
+        };
+    </script>
+
+    <script>
+        // Sample product data - will be stored in Firestore
+        const products = [
+            { id: 1, name: "Wireless Headphones", price: 99.99, image: "🎧", description: "High-quality wireless headphones", category: "Electronics", inStock: true },
+            { id: 2, name: "Smartphone", price: 699.99, image: "📱", description: "Latest smartphone with advanced features", category: "Electronics", inStock: true },
+            { id: 3, name: "Laptop", price: 1299.99, image: "💻", description: "Powerful laptop for work and gaming", category: "Electronics", inStock: true },
+            { id: 4, name: "Smartwatch", price: 299.99, image: "⌚", description: "Smart fitness tracking watch", category: "Electronics", inStock: true },
+            { id: 5, name: "Camera", price: 549.99, image: "📷", description: "Professional digital camera", category: "Electronics", inStock: true },
+            { id: 6, name: "Gaming Console", price: 499.99, image: "🎮", description: "Next-gen gaming console", category: "Electronics", inStock: true }
+        ];
+
+        // Global variables
+        let cart = [];
+        let currentUser = null;
+
+        // Wait for Firebase to load
+        window.addEventListener('load', async () => {
+            // Wait a bit for Firebase modules to be available
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            if (window.firebaseModules) {
+                initializeApp();
+            } else {
+                console.error('Firebase modules not loaded');
+            }
+        });
+
+        // Initialize the app
+        async function initializeApp() {
+    try {
+        // Load cart from localStorage first (immediate)
+        loadCartFromLocalStorage();
+        
+        await loadProducts();
+        updateCartDisplay();
+        setupAuthListener();
+        
+        // If user is logged in, try to load from Firestore
+        if (currentUser) {
+            await loadUserCart();
+        }
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        // App should still work with localStorage
+        loadCartFromLocalStorage();
+        updateCartDisplay();
+    }
+}
+
+        // Setup authentication listener
+       function setupAuthListener() {
+    window.firebaseModules.onAuthStateChanged(window.auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            console.log('User logged in:', user.email);
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'inline-block';
+            
+            // Test permissions after login
+            setTimeout(() => testFirestorePermissions(), 1000);
+            
+            await loadUserCart();
+        } else {
+            currentUser = null;
+            console.log('User logged out');
+            document.getElementById('loginBtn').style.display = 'inline-block';
+            document.getElementById('logoutBtn').style.display = 'none';
+            cart = [];
+            updateCartDisplay();
+        }
+    });
+}
+
+
+        // Load products from Firestore (or create them if they don't exist)
+        async function loadProducts() {
+            try {
+                const productsRef = window.firebaseModules.collection(window.db, 'products');
+                const querySnapshot = await window.firebaseModules.getDocs(productsRef);
+                
+                if (querySnapshot.empty) {
+                    // Create sample products in Firestore (this would typically be done by an admin)
+                    console.log('Creating sample products...');
+                    // For now, just display the local products
+                }
+                
+                displayProducts();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                displayProducts(); // Fallback to local products
+            }
+        }
+
+        // Display products
+        function displayProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">$${product.price}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'cart') {
+                displayCart();
+            }
+            
+            if (pageId === 'checkout') {
+                displayCheckout();
+            }
+        }
+
+        // Add to cart
+       async function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
+    
+    updateCartDisplay();
+    
+    // Save cart to localStorage if user is logged in
+    if (currentUser) {
+        await saveCartToFirestore();
+    }
+async function saveCartToFirestore() {
+    if (!currentUser) {
+        // If not logged in, save to localStorage
+        saveCartToLocalStorage();
+        return;
+    }
+    
+    try {
+        const cartRef = window.firebaseModules.doc(window.db, 'carts', currentUser.uid);
+        await window.firebaseModules.setDoc(cartRef, {
+            items: cart,
+            updatedAt: window.firebaseModules.serverTimestamp()
+        });
+        
+        // Also save to localStorage as backup
+        saveCartToLocalStorage();
+    } catch (error) {
+        console.error('Error saving cart to Firestore:', error);
+        // Fallback to localStorage
+        saveCartToLocalStorage();
+    }
+}
+
+        // Save cart to Firestore
+      
+            const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        const button = card.querySelector('.add-to-cart');
+        if (card.innerHTML.includes(product.name)) {
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            button.style.background = '#27ae60';
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#667eea';
+            }, 1000);
+        }
+    });
+}
+
+        // Load user cart from Firestore
+        async function loadUserCart() {
+            if (!currentUser) return;
+            
+            try {
+                const cartRef = window.firebaseModules.doc(window.db, 'carts', currentUser.uid);
+                const cartDoc = await window.firebaseModules.getDoc(cartRef);
+                
+                if (cartDoc.exists()) {
+                    cart = cartDoc.data().items || [];
+                    updateCartDisplay();
+                }
+            } catch (error) {
+                console.error('Error loading cart:', error);
+            }
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Display cart items
+        function displayCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><h3>Your cart is empty</h3><p>Add some products to get started!</p></div>';
+                cartTotal.style.display = 'none';
+                return;
+            }
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <h3>${item.name}</h3>
+                        <p>$${item.price.toFixed(2)} each</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span style="font-weight: bold; font-size: 1.2rem;">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button style="background: #ff4757; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; margin-left: 1rem; cursor: pointer;" onclick="removeFromCart(${item.id})">Remove</button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            totalAmount.textContent = `$${total.toFixed(2)}`;
+            cartTotal.style.display = 'block';
+        }
+
+        // Update quantity
+        async function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartDisplay();
+                    displayCart();
+                    
+                    if (currentUser) {
+                        await saveCartToFirestore();
+                    }
+                }
+            }
+        }
+
+        // Remove from cart
+        async function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+            displayCart();
+            
+            if (currentUser) {
+                await saveCartToFirestore();
+            }
+        }
+
+        // Display checkout (continuation from where it stopped)
+        function displayCheckout() {
+            const checkoutItems = document.getElementById('checkoutItems');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            
+            checkoutItems.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const orderItem = document.createElement('div');
+                orderItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e1e8ed;';
+                orderItem.innerHTML = `
+                    <div>
+                        <div style="font-weight: bold;">${item.name}</div>
+                        <div style="color: #666; font-size: 0.9rem;">$${item.price.toFixed(2)} × ${item.quantity}</div>
+                    </div>
+                    <div style="font-weight: bold;">$${(item.price * item.quantity).toFixed(2)}</div>
+                `;
+                checkoutItems.appendChild(orderItem);
+            });
+            
+            checkoutTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Handle login form
+     document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const successMsg = document.getElementById('loginSuccess');
+    const errorMsg = document.getElementById('loginError');
+    
+    // Hide previous messages
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    
+    if (!email || !password) {
+        errorMsg.textContent = 'Please fill in all fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    try {
+        await window.firebaseModules.signInWithEmailAndPassword(window.auth, email, password);
+        successMsg.style.display = 'block';
+        
+        setTimeout(() => {
+            showPage('home');
+            successMsg.style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        let errorMessage = 'Login failed. Please try again.';
+        
+        switch (error.code) {
+            case 'auth/invalid-credential':
+                errorMessage = 'Invalid email or password. Please check your credentials.';
+                break;
+            case 'auth/user-not-found':
+                errorMessage = 'No account found with this email.';
+                break;
+            case 'auth/wrong-password':
+                errorMessage = 'Incorrect password.';
+                break;
+            case 'auth/invalid-email':
+                errorMessage = 'Please enter a valid email address.';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = 'Too many failed attempts. Please try again later.';
+                break;
+        }
+        
+        errorMsg.textContent = errorMessage;
+        errorMsg.style.display = 'block';
+    }
+});
+
+        // Handle register form
+     document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const successMsg = document.getElementById('registerSuccess');
+    const errorMsg = document.getElementById('registerError');
+    
+    // Hide previous messages
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    
+    // Basic validation
+    if (!name || !email || !password) {
+        errorMsg.textContent = 'Please fill in all fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (password.length < 6) {
+        errorMsg.textContent = 'Password must be at least 6 characters long';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const userCredential = await window.firebaseModules.createUserWithEmailAndPassword(window.auth, email, password);
+        
+        // Save user profile
+        await window.firebaseModules.setDoc(window.firebaseModules.doc(window.db, 'users', userCredential.user.uid), {
+            name: name,
+            email: email,
+            createdAt: window.firebaseModules.serverTimestamp()
+        });
+        
+        successMsg.style.display = 'block';
+        
+        setTimeout(() => {
+            showPage('home');
+            successMsg.style.display = 'none';
+            document.getElementById('registerForm').reset();
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        let errorMessage = 'Registration failed. Please try again.';
+        
+        switch (error.code) {
+            case 'auth/email-already-in-use':
+                errorMessage = 'An account with this email already exists. Try logging in instead.';
+                break;
+            case 'auth/invalid-email':
+                errorMessage = 'Please enter a valid email address.';
+                break;
+            case 'auth/weak-password':
+                errorMessage = 'Password is too weak. Please use at least 6 characters.';
+                break;
+        }
+        
+        errorMsg.textContent = errorMessage;
+        errorMsg.style.display = 'block';
+    }
+});
+
+function loadCartFromLocalStorage() {
+    try {
+        const savedCart = localStorage.getItem('shophub_cart');
+        if (savedCart) {
+            cart = JSON.parse(savedCart);
+            updateCartDisplay();
+        }
+    } catch (error) {
+        console.error('Could not load cart from localStorage:', error);
+    }
+}
+
+        // Handle checkout form
+       document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Check if user is logged in
+    if (!currentUser) {
+        alert('Please login to place an order');
+        showPage('login');
+        return;
+    }
+    
+    // Check if cart has items
+    if (cart.length === 0) {
+        alert('Your cart is empty');
+        showPage('cart');
+        return;
+    }
+    
+    const successMsg = document.getElementById('orderSuccess');
+    const errorMsg = document.getElementById('orderError');
+    
+    // Hide previous messages
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    
+    // Validate form fields
+    const requiredFields = ['fullName', 'address', 'city', 'zipCode', 'cardNumber', 'expiryDate', 'cvv'];
+    const missingFields = [];
+    
+    for (const field of requiredFields) {
+        const value = document.getElementById(field).value.trim();
+        if (!value) {
+            missingFields.push(field);
+        }
+    }
+    
+    if (missingFields.length > 0) {
+        errorMsg.textContent = 'Please fill in all required fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    // Calculate total
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Prepare order data
+    const orderData = {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            total: item.price * item.quantity
+        })),
+        total: total,
+        shippingInfo: {
+            fullName: document.getElementById('fullName').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            zipCode: document.getElementById('zipCode').value.trim()
+        },
+        paymentInfo: {
+            cardLast4: document.getElementById('cardNumber').value.slice(-4),
+            expiryDate: document.getElementById('expiryDate').value
+        },
+        status: 'pending',
+        orderNumber: 'ORD-' + Date.now(),
+        createdAt: window.firebaseModules.serverTimestamp()
+    };
+    
+    try {
+        console.log('Attempting to create order for user:', currentUser.uid);
+        console.log('Order data:', orderData);
+        
+        // Create order in Firestore
+        const docRef = await window.firebaseModules.addDoc(
+            window.firebaseModules.collection(window.db, 'orders'), 
+            orderData
+        );
+        
+        console.log('Order created successfully with ID:', docRef.id);
+        
+        // Clear cart from Firestore
+        try {
+            const cartRef = window.firebaseModules.doc(window.db, 'carts', currentUser.uid);
+            await window.firebaseModules.setDoc(cartRef, {
+                items: [],
+                updatedAt: window.firebaseModules.serverTimestamp()
+            });
+        } catch (cartError) {
+            console.log('Could not clear cart from Firestore:', cartError);
+        }
+        
+        // Clear local cart
+        cart = [];
+        localStorage.removeItem('shophub_cart');
+        updateCartDisplay();
+        
+        // Show success message
+        successMsg.style.display = 'block';
+        
+        setTimeout(() => {
+            showPage('home');
+            successMsg.style.display = 'none';
+            document.getElementById('checkoutForm').reset();
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Order creation failed:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        
+        let errorMessage = 'Order failed. Please try again.';
+        
+        if (error.code === 'permission-denied') {
+            errorMessage = 'Permission denied. Please make sure you are logged in and try again.';
+        } else if (error.code === 'unavailable') {
+            errorMessage = 'Service temporarily unavailable. Please try again later.';
+        }
+        
+        errorMsg.textContent = errorMessage;
+        errorMsg.style.display = 'block';
+    }
+});
+
+async function testFirestorePermissions() {
+    if (!currentUser) {
+        console.log('No user logged in');
+        return;
+    }
+    
+    try {
+        // Test writing to user's cart
+        const cartRef = window.firebaseModules.doc(window.db, 'carts', currentUser.uid);
+        await window.firebaseModules.setDoc(cartRef, {
+            test: true,
+            timestamp: window.firebaseModules.serverTimestamp()
+        });
+        console.log('Cart write test: SUCCESS');
+        
+        // Test reading from user's cart
+        const cartDoc = await window.firebaseModules.getDoc(cartRef);
+        console.log('Cart read test: SUCCESS', cartDoc.exists());
+        
+        // Test writing to orders
+        const testOrder = {
+            userId: currentUser.uid,
+            test: true,
+            createdAt: window.firebaseModules.serverTimestamp()
+        };
+        
+        const orderRef = await window.firebaseModules.addDoc(
+            window.firebaseModules.collection(window.db, 'orders'), 
+            testOrder
+        );
+        console.log('Order write test: SUCCESS', orderRef.id);
+        
+    } catch (error) {
+        console.error('Firestore permission test failed:', error);
+    }
+}
+
+        // Logout function
+        async function logout() {
+            try {
+                await window.firebaseModules.signOut(window.auth);
+                cart = [];
+                updateCartDisplay();
+                showPage('home');
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Make logout function globally available
+        window.logout = logout;
+
+        // Input formatting for payment fields
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = value;
+        });
+
+        document.getElementById('expiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
+    </script>
+</body>
+</html>
+        
